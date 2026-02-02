@@ -140,18 +140,35 @@
 
 /* Ghost Helper Button Styles */
 .ghost-helper {
-  @apply fixed bottom-8 right-8 z-50;
-  @apply bg-transparent border-none cursor-pointer;
-  @apply focus:outline-none focus:ring-2 focus:ring-white;
-  @apply focus:ring-offset-2 focus:ring-offset-black;
-  @apply transition-transform hover:scale-110;
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 50;
+  background: transparent;
+  border: none;
+  cursor: pointer;
   padding: 0;
   width: 100px;
   height: 100px;
+  transition: transform 0.2s;
+}
+
+.ghost-helper:hover {
+  transform: scale(1.1);
+}
+
+.ghost-helper:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px black, 0 0 0 4px white;
 }
 
 .ghost-background {
-  @apply absolute inset-0 bg-black/30 rounded-full blur-xl -z-10;
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 9999px;
+  filter: blur(12px);
+  z-index: -10;
 }
 
 #ghost-container {
