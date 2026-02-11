@@ -1,0 +1,112 @@
+#spooky {
+    margin: 10% auto;
+    width: 80%;
+    height: 80%;
+    animation: floaty 2s infinite;
+}
+
+#spooky #body {
+    position: relative;
+    margin: 50px auto 0;
+    width: 45px; /* reduced by 75% */
+    height: 55px; /* reduced by 75% */
+    background: #f2fbf1;
+    border-top-left-radius: 22.5px; /* reduced by 75% */
+    border-top-right-radius: 22.5px; /* reduced by 75% */
+}
+
+#spooky #body:before,
+#spooky #body:after {
+    content: "";
+    position: absolute;
+    top: 32.5px; /* reduced by 75% */
+    display: inline-block;
+    width: 9px; /* reduced by 75% */
+    height: 9px; /* reduced by 75% */
+    border-radius: 50%;
+    background: #f2fbf1;
+    animation: floaty 0.2s infinite;
+}
+
+#spooky #body:before {
+    left: -4.5px; /* reduced by 75% */
+}
+
+#spooky #body:after {
+    right: -4.5px; /* reduced by 75% */
+}
+
+#spooky #body #eyes {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto;
+    padding: 22.5px 0 0; /* reduced by 75% */
+    width: 22.5px; /* reduced by 75% */
+    height: 5px; /* reduced by 75% */
+}
+
+#spooky #body #eyes:before,
+#spooky #body #eyes:after {
+    content: "";
+    display: block;
+    width: 7.5px; /* reduced by 75% */
+    height: 7.5px; /* reduced by 75% */
+    background: #252c49;
+    border-radius: 50%;
+}
+
+#spooky #body #mouth {
+    background: #252c49;
+    margin: 8.75px auto 0; /* reduced by 75% */
+    width: 15px; /* reduced by 75% */
+    height: 7.5px; /* reduced by 75% */
+    border-bottom-left-radius: 7.5px; /* reduced by 75% */
+    border-bottom-right-radius: 7.5px; /* reduced by 75% */
+}
+
+#spooky #body #mouth:before {
+    content: "";
+    display: block;
+    background: #fff;
+    margin: 5px; /* reduced by 75% */
+    width: 2.5px; /* reduced by 75% */
+    height: 2.5px; /* reduced by 75% */
+}
+
+#spooky #body #feet {
+    position: absolute;
+    display: flex;
+    bottom: -4.5px; /* reduced by 75% */
+    width: 45px; /* reduced by 75% */
+    height: 9px; /* reduced by 75% */
+}
+
+#spooky #body #feet > *,
+#spooky #body #feet::before,
+#spooky #body #feet::after {
+    content: " ";
+    width: 9px; /* reduced by 75% */
+    height: 9px; /* reduced by 75% */
+    background: #f2fbf1;
+    border-radius: 50%;
+}
+
+#shadow {
+    margin: -22.5px auto 0; /* reduced by 75% */
+    background: #252c49;
+    width: 45px; /* reduced by 75% */
+    height: 10px; /* reduced by 75% */
+    border-radius: 50%;
+    animation: zoomy 2s infinite;
+}
+
+@keyframes floaty {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px); /* reduced by 75% */
+    }
+}
