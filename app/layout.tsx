@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Henny_Penny } from "next/font/google";
+import ScreenReaderToggle from "@/components/screen-reader-toggle";
 import "./globals.css";
 
 const geist = Geist({
@@ -28,6 +29,7 @@ export default function RootLayout({
       <body
         className={`${geist.variable} ${hennyPenny.variable} font-geist antialiased bg-black text-white`}
       >
+        <ScreenReaderToggle />
         {children}
       </body>
     </html>
