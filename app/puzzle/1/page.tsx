@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import PuzzleComplete from "@/components/puzzle-complete";
 import PuzzleFooter from "@/components/puzzle-footer";
 import { formatTime } from "@/lib/utils";
+import { puzzleComplete } from "@/lib/puzzleComplete";
 
 export default function Puzzle1() {
   const [puzzleSolved, setPuzzleSolved] = useState(false);
@@ -19,6 +20,7 @@ export default function Puzzle1() {
   }, [startTime]);
 
   const handlePuzzleComplete = () => {
+    puzzleComplete(1, elapsedTime);
     setPuzzleSolved(true);
   };
 

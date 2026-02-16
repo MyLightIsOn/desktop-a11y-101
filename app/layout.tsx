@@ -29,6 +29,9 @@ export default function RootLayout({
       <body
         className={`${geist.variable} ${hennyPenny.variable} font-geist antialiased bg-black text-white`}
       >
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
         <ScreenReaderToggle />
         {children}
       </body>
