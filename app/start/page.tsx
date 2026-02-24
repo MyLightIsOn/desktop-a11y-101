@@ -87,12 +87,24 @@ export default function StartPage() {
           ))}
         </div>
 
-        <div className="text-center">
+        <div className="flex justify-center gap-8">
           <a
             href="/"
             className="text-spooky-purple hover:text-purple-400 underline transition-colors"
           >
             ← Back to Home
+          </a>
+          <a
+            href="/lessons"
+            className="text-spooky-purple hover:text-purple-400 underline transition-colors"
+          >
+            Practice Lessons
+          </a>
+          <a
+            href="/feedback"
+            className="text-spooky-purple hover:text-purple-400 underline transition-colors"
+          >
+            Give Feedback
           </a>
         </div>
       </div>

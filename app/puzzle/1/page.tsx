@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import PuzzleComplete from "@/components/puzzle-complete";
 import PuzzleFooter from "@/components/puzzle-footer";
 import { formatTime } from "@/lib/utils";
+import { puzzleComplete } from "@/lib/puzzleComplete";
+import ResetButton from "@/components/reset-button";
 
 export default function Puzzle1() {
   const [puzzleSolved, setPuzzleSolved] = useState(false);
@@ -19,12 +21,14 @@ export default function Puzzle1() {
   }, [startTime]);
 
   const handlePuzzleComplete = () => {
+    puzzleComplete(1, elapsedTime);
     setPuzzleSolved(true);
   };
 
   return (
     <main className="min-h-screen bg-black text-white p-8">
       <div className="container mx-auto max-w-4xl">
+        <ResetButton />
         <h1 className="text-4xl font-henny mb-6">Puzzle 1: The Dusty Attic</h1>
 
         <p className="text-gray-300 mb-4">
@@ -42,13 +46,7 @@ export default function Puzzle1() {
 
         {/* Hidden success heading */}
         <div className="sr-only">
-          <h3>Congratulations! You found the secret heading.</h3>
-          <button
-            onClick={handlePuzzleComplete}
-            className="underline text-spooky-green"
-          >
-            Press Enter to complete the puzzle
-          </button>
+          <h3 onClick={handlePuzzleComplete}>Congratulations! You found the secret heading. Press Enter to complete the puzzle</h3>
         </div>
 
         {/* More decoy paragraphs */}
