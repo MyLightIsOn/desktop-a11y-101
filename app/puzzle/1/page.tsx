@@ -28,7 +28,6 @@ export default function Puzzle1() {
   return (
     <main className="min-h-screen bg-black text-white p-8">
       <div className="container mx-auto max-w-4xl">
-        <ResetButton />
         <h1 className="text-4xl font-henny mb-6">Puzzle 1: The Dusty Attic</h1>
 
         <p className="text-gray-300 mb-4">
@@ -36,23 +35,134 @@ export default function Puzzle1() {
           but somewhere hidden among them is the key to escape.
         </p>
 
-        {/* Decoy paragraphs */}
-        {Array.from({ length: 50 }).map((_, i) => (
-          <p key={`decoy-${i}`} className="sr-only">
+        {/* Decoy paragraphs before first decoy heading */}
+        {Array.from({ length: 10 }).map((_, i) => (
+          <p key={`decoy-a-${i}`} className="sr-only">
             Decoy text paragraph {i + 1}. This is just filler content that screen reader
             users shouldn't have to read through. Use heading navigation!
           </p>
         ))}
 
-        {/* Hidden success heading */}
+        {/* Decoy headings before the winning heading */}
         <div className="sr-only">
-          <h3 onClick={handlePuzzleComplete}>Congratulations! You found the secret heading. Press Enter to complete the puzzle</h3>
+          <h2>A Dusty Old Chest</h2>
+          <p>An old chest covered in cobwebs. Nothing useful inside.</p>
         </div>
 
-        {/* More decoy paragraphs */}
-        {Array.from({ length: 50 }).map((_, i) => (
-          <p key={`decoy-end-${i}`} className="sr-only">
+        {Array.from({ length: 10 }).map((_, i) => (
+          <p key={`decoy-b-${i}`} className="sr-only">
+            Decoy text paragraph {i + 1}. Keep searching — the real heading is nearby.
+          </p>
+        ))}
+
+        <div className="sr-only">
+          <h2>A Broken Rocking Chair</h2>
+          <p>The chair creaks softly on its own. Nothing here.</p>
+        </div>
+
+        {Array.from({ length: 10 }).map((_, i) => (
+          <p key={`decoy-c-${i}`} className="sr-only">
+            Decoy text paragraph {i + 1}. The attic stretches on endlessly.
+          </p>
+        ))}
+
+        <div className="sr-only">
+          <h2>A Stack of Yellowed Newspapers</h2>
+          <p>Headlines from decades past. Nothing of use.</p>
+        </div>
+
+        {Array.from({ length: 10 }).map((_, i) => (
+          <p key={`decoy-d-${i}`} className="sr-only">
+            Decoy text paragraph {i + 1}. Dust motes swirl in the dark air.
+          </p>
+        ))}
+
+        <div className="sr-only">
+          <h2>A Tarnished Mirror</h2>
+          <p>Your reflection stares back, distorted. This isn&apos;t it.</p>
+        </div>
+
+        {Array.from({ length: 10 }).map((_, i) => (
+          <p key={`decoy-e-${i}`} className="sr-only">
+            Decoy text paragraph {i + 1}. Something important must be here somewhere.
+          </p>
+        ))}
+
+        <div className="sr-only">
+          <h2>A Pile of Moth-Eaten Clothes</h2>
+          <p>Old garments from another era. Nothing to find here.</p>
+        </div>
+
+        {Array.from({ length: 10 }).map((_, i) => (
+          <p key={`decoy-f-${i}`} className="sr-only">
+            Decoy text paragraph {i + 1}. The air grows colder as you press deeper into the attic.
+          </p>
+        ))}
+
+        {/* Hidden success heading */}
+        <div className="sr-only">
+          <h2 onClick={handlePuzzleComplete}>Congratulations! You found the secret heading. Activate to complete the puzzle.</h2>
+        </div>
+
+        {/* Decoy headings after the winning heading */}
+        {Array.from({ length: 10 }).map((_, i) => (
+          <p key={`decoy-g-${i}`} className="sr-only">
             More decoy text paragraph {i + 1}. Keep navigating by headings!
+          </p>
+        ))}
+
+        <div className="sr-only">
+          <h2>A Cracked Porcelain Doll</h2>
+          <p>Its glass eyes follow you. Nothing here.</p>
+        </div>
+
+        {Array.from({ length: 10 }).map((_, i) => (
+          <p key={`decoy-h-${i}`} className="sr-only">
+            Decoy text paragraph {i + 1}. The shadows deepen around you.
+          </p>
+        ))}
+
+        <div className="sr-only">
+          <h2>A Locked Steamer Trunk</h2>
+          <p>Bound shut with rusted iron clasps. The key is nowhere to be found.</p>
+        </div>
+
+        {Array.from({ length: 10 }).map((_, i) => (
+          <p key={`decoy-i-${i}`} className="sr-only">
+            Decoy text paragraph {i + 1}. A floorboard groans beneath your feet.
+          </p>
+        ))}
+
+        <div className="sr-only">
+          <h2>A Faded Oil Painting</h2>
+          <p>A portrait of someone long forgotten. Not what you need.</p>
+        </div>
+
+        {Array.from({ length: 10 }).map((_, i) => (
+          <p key={`decoy-j-${i}`} className="sr-only">
+            Decoy text paragraph {i + 1}. The attic holds many secrets, but not for you.
+          </p>
+        ))}
+
+        <div className="sr-only">
+          <h2>A Bundle of Old Letters</h2>
+          <p>Tied with a fraying ribbon. The handwriting is too faded to read.</p>
+        </div>
+
+        {Array.from({ length: 10 }).map((_, i) => (
+          <p key={`decoy-k-${i}`} className="sr-only">
+            Decoy text paragraph {i + 1}. You&apos;ve come too far — backtrack with Shift+H.
+          </p>
+        ))}
+
+        <div className="sr-only">
+          <h2>A Rusted Weather Vane</h2>
+          <p>Pointing in no particular direction. Nothing of use.</p>
+        </div>
+
+        {Array.from({ length: 10 }).map((_, i) => (
+          <p key={`decoy-l-${i}`} className="sr-only">
+            Decoy text paragraph {i + 1}. The way out remains hidden somewhere above.
           </p>
         ))}
 
