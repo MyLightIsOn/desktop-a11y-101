@@ -6,6 +6,7 @@ import PuzzleFooter from "@/components/puzzle-footer";
 import { formatTime } from "@/lib/utils";
 import { puzzleComplete } from "@/lib/puzzleComplete";
 import ResetButton from "@/components/reset-button";
+import PuzzleShortcutsPanel from "@/components/puzzle-shortcuts-panel";
 
 export default function Puzzle3() {
   const [puzzleSolved, setPuzzleSolved] = useState(false);
@@ -26,6 +27,13 @@ export default function Puzzle3() {
 
   return (
     <main className="min-h-screen bg-black text-white p-8">
+      <PuzzleShortcutsPanel
+        shortcuts={[
+          { description: "Next landmark / region", nvda: "D", vo: "VO + U (then Landmarks)" },
+          { description: "Previous landmark", nvda: "Shift + D", vo: "VO + Shift + U" },
+          { description: "Open element list / rotor", nvda: "Insert + F7", vo: "VO + U" },
+        ]}
+      />
       <div className="container mx-auto max-w-4xl">
         <ResetButton />
         <h1 className="text-4xl font-henny mb-6">Puzzle 3: The Winding Corridors</h1>

@@ -6,6 +6,7 @@ import PuzzleFooter from "@/components/puzzle-footer";
 import { formatTime } from "@/lib/utils";
 import { puzzleComplete } from "@/lib/puzzleComplete";
 import ResetButton from "@/components/reset-button";
+import PuzzleShortcutsPanel from "@/components/puzzle-shortcuts-panel";
 
 export default function Puzzle6() {
   const [puzzleSolved, setPuzzleSolved] = useState(false);
@@ -65,6 +66,15 @@ export default function Puzzle6() {
 
   return (
     <main className="min-h-screen bg-black text-white p-8">
+      <PuzzleShortcutsPanel
+        shortcuts={[
+          { description: "Next heading", nvda: "H", vo: "VO + Cmd + H" },
+          { description: "Next landmark", nvda: "D", vo: "VO + U (then Landmarks)" },
+          { description: "Next form field", nvda: "F", vo: "VO + Cmd + J" },
+          { description: "Open element list / rotor", nvda: "Insert + F7", vo: "VO + U" },
+          { description: "Activate element", nvda: "Enter", vo: "VO + Space" },
+        ]}
+      />
       <div className="container mx-auto max-w-4xl">
         <ResetButton />
         <h1 className="text-4xl font-henny mb-6">Puzzle 6: The Haunted Ballroom</h1>
