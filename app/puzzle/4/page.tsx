@@ -6,6 +6,7 @@ import PuzzleFooter from "@/components/puzzle-footer";
 import { formatTime } from "@/lib/utils";
 import { puzzleComplete } from "@/lib/puzzleComplete";
 import ResetButton from "@/components/reset-button";
+import PuzzleShortcutsPanel from "@/components/puzzle-shortcuts-panel";
 
 export default function Puzzle4() {
   const [puzzleSolved, setPuzzleSolved] = useState(false);
@@ -26,6 +27,14 @@ export default function Puzzle4() {
 
   return (
     <main className="min-h-screen bg-black text-white p-8">
+      <PuzzleShortcutsPanel
+        shortcuts={[
+          { description: "Open links list", nvda: "Insert + F7", vo: "VO + U (then Links)" },
+          { description: "Next link", nvda: "K", vo: "VO + Cmd + L" },
+          { description: "Previous link", nvda: "Shift + K", vo: "VO + Shift + Cmd + L" },
+          { description: "Activate a link", nvda: "Enter", vo: "VO + Space" },
+        ]}
+      />
       <div className="container mx-auto max-w-4xl">
         <ResetButton />
         <h1 className="text-4xl font-henny mb-6">Puzzle 4: The Grand Foyer</h1>

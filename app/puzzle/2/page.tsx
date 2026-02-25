@@ -6,6 +6,7 @@ import PuzzleFooter from "@/components/puzzle-footer";
 import { formatTime } from "@/lib/utils";
 import { puzzleComplete } from "@/lib/puzzleComplete";
 import ResetButton from "@/components/reset-button";
+import PuzzleShortcutsPanel from "@/components/puzzle-shortcuts-panel";
 
 export default function Puzzle2() {
   const [puzzleSolved, setPuzzleSolved] = useState(false);
@@ -37,6 +38,14 @@ export default function Puzzle2() {
 
   return (
     <main className="min-h-screen bg-black text-white p-8">
+      <PuzzleShortcutsPanel
+        shortcuts={[
+          { description: "Read next line (browse mode)", nvda: "Down Arrow", vo: "VO + Right Arrow" },
+          { description: "Enter focus mode", nvda: "Enter", vo: "VO + Shift + Down Arrow" },
+          { description: "Exit focus mode", nvda: "Escape", vo: "Escape" },
+          { description: "Activate a button", nvda: "Enter", vo: "VO + Space" },
+        ]}
+      />
       <div className="container mx-auto max-w-4xl">
         <ResetButton />
         <h1 className="text-4xl font-henny mb-6">Puzzle 2: The Mysterious Library</h1>
