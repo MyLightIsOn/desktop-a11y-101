@@ -1,6 +1,11 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-spooky-purple: #8b5cf6;
+  --color-spooky-green: #10b981;
+  --font-geist: var(--font-geist-sans);
+  --font-henny: var(--font-henny-penny);
+}
 
 /* Screen reader only utility */
 .sr-only {
