@@ -35,13 +35,13 @@ export default function StartPage() {
     {
       number: 2,
       title: "The Mysterious Library",
-      description: "Learn browse vs focus mode in an ancient library with enchanted books.",
+      description: "Discover why button labels matter in an ancient library of identical tomes.",
       href: "/puzzle/2",
     },
     {
       number: 3,
-      title: "The Winding Corridors",
-      description: "Navigate landmarks in maze-like hallways with multiple rooms.",
+      title: "The Forgotten Gallery",
+      description: "Read image descriptions to uncover the hidden order of four crooked portraits.",
       href: "/puzzle/3",
     },
     {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import PuzzleComplete from "@/components/puzzle-complete";
 import PuzzleFooter from "@/components/puzzle-footer";
 import { formatTime } from "@/lib/utils";
@@ -8,10 +8,44 @@ import { puzzleComplete } from "@/lib/puzzleComplete";
 import ResetButton from "@/components/reset-button";
 import PuzzleShortcutsPanel from "@/components/puzzle-shortcuts-panel";
 
+interface Button {
+  aria: string;
+  isCorrect: boolean;
+}
+
+function shuffle(array: Button[]): Button[] {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function generateButtons(): Button[] {
+  const buttons: Button[] = Array.from({ length: 9 }, () => ({
+    aria: "Do Not Click Here",
+    isCorrect: false,
+  }));
+  const correctIndex = Math.floor(Math.random() * 9);
+  buttons[correctIndex] = {
+    aria: "This is the correct book. Press Enter to open it.",
+    isCorrect: true,
+  };
+  return shuffle(buttons);
+}
+
 export default function Puzzle2() {
+  const [buttons, setButtons] = useState<Button[]>([]);
   const [puzzleSolved, setPuzzleSolved] = useState(false);
   const [startTime] = useState(Date.now());
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [isLockedOut, setIsLockedOut] = useState(false);
+  const [lockoutTimer, setLockoutTimer] = useState(10);
+
+  useEffect(() => {
+    setButtons(generateButtons());
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -20,30 +54,46 @@ export default function Puzzle2() {
     return () => clearInterval(interval);
   }, [startTime]);
 
-  const handlePuzzleComplete = () => {
-    puzzleComplete(2, elapsedTime);
-    setPuzzleSolved(true);
-  };
+  useEffect(() => {
+    if (!isLockedOut) return;
+    if (lockoutTimer === 0) {
+      setIsLockedOut(false);
+      setLockoutTimer(10);
+      setButtons(generateButtons());
+      return;
+    }
+    const timeout = setTimeout(() => setLockoutTimer((t) => t - 1), 1000);
+    return () => clearTimeout(timeout);
+  }, [isLockedOut, lockoutTimer]);
 
-  const decoyBooks = [
-    "The Whispering Grimoire",
-    "Shadows of the Forgotten",
-    "The Crimson Codex",
-    "Tales of the Moonlit Garden",
-    "The Phantom's Ledger",
-    "Echoes in the Dark",
-    "The Silver Chalice Manual",
-    "Forbidden Alchemy Vol. III",
-  ];
+  const handleClick = useCallback((btn: Button) => {
+    if (btn.isCorrect) {
+      puzzleComplete(2, elapsedTime);
+      setPuzzleSolved(true);
+    } else {
+      setIsLockedOut(true);
+      setLockoutTimer(10);
+    }
+  }, [elapsedTime]);
+
+  if (isLockedOut) {
+    return (
+      <div className="min-h-screen bg-red-950 text-white flex items-center justify-center flex-col text-center p-8" aria-live="assertive">
+        <p className="text-2xl font-bold text-red-300 mb-4">Wrong book!</p>
+        <p className="text-gray-300 mb-8">The shelves rearrange themselves. Try again in:</p>
+        <p className="text-9xl font-bold text-red-400" aria-label={`${lockoutTimer} seconds`}>{lockoutTimer}</p>
+        <p className="text-gray-400 mt-4">seconds...</p>
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-black text-white p-8">
       <PuzzleShortcutsPanel
         shortcuts={[
-          { description: "Read next line (browse mode)", nvda: "Down Arrow", vo: "VO + Right Arrow" },
-          { description: "Enter focus mode", nvda: "Enter", vo: "VO + Shift + Down Arrow" },
-          { description: "Exit focus mode", nvda: "Escape", vo: "Escape" },
-          { description: "Activate a button", nvda: "Enter", vo: "VO + Space" },
+          { description: "Move between buttons", nvda: "Tab", vo: "Tab" },
+          { description: "Read button label", nvda: "NVDA + Tab", vo: "VO + F2" },
+          { description: "Activate a button", nvda: "Enter or Space", vo: "VO + Space" },
         ]}
       />
       <div className="container mx-auto max-w-4xl">
@@ -51,67 +101,33 @@ export default function Puzzle2() {
         <h1 className="text-4xl font-henny mb-6">Puzzle 2: The Mysterious Library</h1>
 
         <p className="text-gray-300 mb-4">
-          You step into an ancient library. Towering bookshelves stretch to the ceiling,
-          filled with leather-bound volumes. Several books seem to glow with an eerie light,
-          beckoning you to interact with them.
+          You step deeper into the library. On the central reading table sits a
+          peculiar panel — nine identical buttons, each engraved with the same
+          unhelpful inscription.
         </p>
 
         <p className="text-gray-300 mb-8">
-          But appearances can be deceiving. Not every book wants to be grabbed — some
-          secrets reveal themselves only to those who read carefully.
+          Only one button opens the hidden passage. Your eyes are no help here.
+          You&apos;ll need to listen carefully.
         </p>
 
-        {/* Visible decoy books - tabbing through these won't solve the puzzle */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          {decoyBooks.map((book, i) => (
+        <div className="relative grid grid-cols-3 gap-4 max-w-lg mb-8">
+          <div className="absolute inset-0 z-10" aria-hidden="true" />
+          {buttons.map((btn, i) => (
             <button
               key={i}
-              className="bg-gray-900 border border-gray-700 rounded-lg p-4 text-sm text-gray-300 hover:border-purple-500 transition-colors focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black"
-              onClick={() => {/* decoy - does nothing */}}
+              aria-label={btn.aria}
+              tabIndex={-1}
+              className="bg-gray-900 border border-gray-700 rounded-lg p-6 text-sm text-gray-300 hover:border-purple-500 transition-colors focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black"
+              onClick={() => handleClick(btn)}
             >
-              📖 {book}
+              Click Here
             </button>
           ))}
         </div>
 
-        {/* SR-only content - the real puzzle path */}
-        <div className="sr-only">
-          <p>You notice something strange as you browse the shelves. Between the glowing books, hidden in the shadows, there is a book that doesn&apos;t glow at all. It sits quietly, waiting to be discovered by those who take the time to read rather than grab.</p>
-        </div>
-
-        <div className="sr-only">
-          <p>The ancient texts surrounding you whisper fragments of knowledge. &quot;Not everything of value shines,&quot; one passage reads. &quot;The wisest readers browse before they focus.&quot;</p>
-        </div>
-
-        {/* More visible decoys */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-henny text-gray-400 mb-4">The Reading Table</h2>
-          <div className="flex gap-4">
-            <button className="bg-gray-900 border border-gray-700 rounded-lg p-4 text-gray-300 hover:border-purple-500 transition-colors focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black">
-              📜 Open the Scroll
-            </button>
-            <button className="bg-gray-900 border border-gray-700 rounded-lg p-4 text-gray-300 hover:border-purple-500 transition-colors focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black">
-              🔮 Touch the Crystal
-            </button>
-          </div>
-        </div>
-
-        <div className="sr-only">
-          <p>Deep within the library, past the glowing distractions, you find a shelf tucked in a dark corner. On it sits a single ancient tome, unadorned and humble.</p>
-          <h3>The Ancient Tome</h3>
-          <p>This book cannot be grabbed or clicked — it can only be found by those who browse through the page content. You&apos;ve found it! Press the button below to open it.</p>
-          <button onClick={handlePuzzleComplete}>
-            Open the Ancient Tome
-          </button>
-        </div>
-
-        <div className="sr-only">
-          <p>More dusty shelves line the back wall, but you&apos;ve already found what matters. The Ancient Tome holds the key to escaping this library.</p>
-        </div>
-
-        {/* Visual hint */}
         <div className="mt-8 text-sm text-gray-600 italic">
-          Visual users: This puzzle requires a screen reader. The solution cannot be found by clicking visible books.
+          Visual users: This puzzle requires a screen reader. All buttons look identical.
         </div>
       </div>
 
@@ -122,9 +138,9 @@ export default function Puzzle2() {
         puzzleTitle="The Mysterious Library"
         description={
           <>
-            You&apos;ve mastered <strong>browse vs focus mode</strong>! You learned that some
-            content can only be found by browsing through the page with your screen reader,
-            not by tabbing between interactive elements.
+            You&apos;ve learned why <strong>button labels matter</strong>! Visible text like
+            &quot;Click Here&quot; is meaningless to screen reader users. A descriptive{" "}
+            <code>aria-label</code> tells the user exactly what a button does.
           </>
         }
         completionTime={formatTime(elapsedTime)}
@@ -135,19 +151,15 @@ export default function Puzzle2() {
         hintContent={
           <>
             <p className="mb-2">
-              Not everything needs your focus. Some things you just read past.
+              All the buttons look the same — but they don&apos;t sound the same.
             </p>
             <p className="mb-2">
-              <strong>Try:</strong> Instead of pressing Tab to jump between buttons,
-              use your screen reader&apos;s browse mode to read through the page content.
-            </p>
-            <p className="mb-2">
-              <strong>NVDA:</strong> Use <kbd>Down Arrow</kbd> to read line by line,
-              or <kbd>H</kbd> to jump to the next heading.
+              <strong>NVDA:</strong> Press <kbd>Tab</kbd> to move between buttons and listen
+              to what your screen reader announces for each one.
             </p>
             <p>
-              <strong>VoiceOver:</strong> Use <kbd>VO+Right Arrow</kbd> to move through content,
-              or <kbd>VO+Cmd+H</kbd> for headings.
+              <strong>VoiceOver:</strong> Press <kbd>Tab</kbd> to move between buttons.
+              VoiceOver will read the label of each button automatically.
             </p>
           </>
         }
