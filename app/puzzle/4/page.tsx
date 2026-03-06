@@ -8,10 +8,15 @@ import { puzzleComplete } from "@/lib/puzzleComplete";
 import ResetButton from "@/components/reset-button";
 import PuzzleShortcutsPanel from "@/components/puzzle-shortcuts-panel";
 
+const PASSCODE = "NVDA";
+
 export default function Puzzle4() {
+  const [input, setInput] = useState("");
   const [puzzleSolved, setPuzzleSolved] = useState(false);
   const [startTime] = useState(Date.now());
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [isLockedOut, setIsLockedOut] = useState(false);
+  const [lockoutTimer, setLockoutTimer] = useState(10);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -20,126 +25,179 @@ export default function Puzzle4() {
     return () => clearInterval(interval);
   }, [startTime]);
 
-  const handlePuzzleComplete = () => {
-    puzzleComplete(4, elapsedTime);
-    setPuzzleSolved(true);
+  useEffect(() => {
+    if (!isLockedOut) return;
+    if (lockoutTimer === 0) {
+      setIsLockedOut(false);
+      setLockoutTimer(10);
+      setInput("");
+      return;
+    }
+    const timeout = setTimeout(() => setLockoutTimer((t) => t - 1), 1000);
+    return () => clearTimeout(timeout);
+  }, [isLockedOut, lockoutTimer]);
+
+  const handleSubmit = () => {
+    if (input.toUpperCase() === PASSCODE) {
+      puzzleComplete(4, elapsedTime);
+      setPuzzleSolved(true);
+    } else {
+      setIsLockedOut(true);
+      setLockoutTimer(10);
+      setInput("");
+    }
   };
+
+  const handleChar = (char: string) => {
+    setInput((prev) => (prev.length < 4 ? prev + char : prev));
+  };
+
+  if (isLockedOut) {
+    return (
+      <div
+        className="min-h-screen bg-red-950 text-white flex items-center justify-center flex-col text-center p-8"
+        aria-live="assertive"
+      >
+        <p className="text-2xl font-bold text-red-300 mb-4">Wrong passcode!</p>
+        <p className="text-gray-300 mb-8">
+          The cabinet slams shut. Try again in:
+        </p>
+        <p
+          className="text-9xl font-bold text-red-400"
+          aria-label={`${lockoutTimer} seconds`}
+        >
+          {lockoutTimer}
+        </p>
+        <p className="text-gray-400 mt-4">seconds...</p>
+      </div>
+    );
+  }
+
+  const btnClass =
+    "bg-gray-900 border border-gray-700 rounded-lg py-3 text-gray-300 hover:border-purple-500 transition-colors focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black";
 
   return (
     <main className="min-h-screen bg-black text-white p-8">
       <PuzzleShortcutsPanel
         shortcuts={[
-          { description: "Open links list", nvda: "Insert + F7", vo: "VO + U (then Links)" },
-          { description: "Next link", nvda: "K", vo: "VO + Cmd + L" },
-          { description: "Previous link", nvda: "Shift + K", vo: "VO + Shift + Cmd + L" },
-          { description: "Activate a link", nvda: "Enter", vo: "VO + Space" },
+          { description: "Next table", nvda: "T", vo: "VO + Cmd + T" },
+          { description: "Move between cells", nvda: "Ctrl + Alt + Arrows", vo: "VO + Arrows" },
+          { description: "Enter focus / forms mode", nvda: "Enter", vo: "VO + Shift + Down" },
+          { description: "Exit focus mode", nvda: "Escape", vo: "Escape" },
         ]}
       />
       <div className="container mx-auto max-w-4xl">
         <ResetButton />
-        <h1 className="text-4xl font-henny mb-6">Puzzle 4: The Grand Foyer</h1>
+        <h1 className="text-4xl font-henny mb-6">Puzzle 4: The Keeper&apos;s Study</h1>
 
         <p className="text-gray-300 mb-4">
-          You enter the grand foyer of the Mystery House. It&apos;s an enormous entrance hall
-          with doors and portraits covering every wall. There must be dozens of ways forward,
-          but only one leads to escape.
+          You find yourself in a dusty study. A heavy desk dominates the center
+          of the room, its drawers worn by decades of secrets. On the wall hangs
+          a locked cabinet — it requires a passcode to open.
         </p>
 
         <p className="text-gray-300 mb-8">
-          Going through each door one by one would take forever. There must be a way to
-          see all your options at once...
+          The answers are here somewhere. You&apos;ll need to search every
+          corner of the desk.
         </p>
 
-        {/* West Wall */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-henny text-gray-400 mb-4">West Wall</h2>
-          <p className="text-gray-300 mb-3">The west wall is covered in ornate frames and heavy wooden doors.</p>
-          <div className="space-y-2">
-            <p><a href="#" className="text-spooky-purple hover:text-purple-400 underline" onClick={(e) => e.preventDefault()}>Portrait of Lord Blackwood</a></p>
-            <p className="text-gray-400 text-sm">A stern-faced man in Victorian dress stares down at you.</p>
-            <p><a href="#" className="text-spooky-purple hover:text-purple-400 underline" onClick={(e) => e.preventDefault()}>Door to the Drawing Room</a></p>
-            <p className="text-gray-400 text-sm">An ornate door with a brass handle, slightly ajar.</p>
-            <p><a href="#" className="text-spooky-purple hover:text-purple-400 underline" onClick={(e) => e.preventDefault()}>Painting of the Garden</a></p>
-            <p className="text-gray-400 text-sm">A pastoral scene that seems to shift when you&apos;re not looking directly at it.</p>
-            <p><a href="#" className="text-spooky-purple hover:text-purple-400 underline" onClick={(e) => e.preventDefault()}>Door to the Conservatory</a></p>
-            <p className="text-gray-400 text-sm">Glass panels in this door reveal overgrown plants beyond.</p>
-            <p><a href="#" className="text-spooky-purple hover:text-purple-400 underline" onClick={(e) => e.preventDefault()}>Statue of Lady Whitmore</a></p>
-            <p className="text-gray-400 text-sm">A marble statue with outstretched hands, as if beckoning.</p>
-            <p><a href="#" className="text-spooky-purple hover:text-purple-400 underline" onClick={(e) => e.preventDefault()}>Door to the Music Room</a></p>
-            <p className="text-gray-400 text-sm">Faint piano music drifts from behind this door.</p>
+        {/*
+          Hidden table — positioned off-screen so its full dimensions are
+          preserved for screen reader table navigation. sr-only collapses the
+          element to 1px which can break cell-by-cell navigation.
+        */}
+        <table
+          className="absolute left-[-9999px] top-auto"
+          aria-label="The Keeper's Desk"
+        >
+          <caption>The Keeper&apos;s Desk — search each section carefully</caption>
+          <thead>
+            <tr>
+              <th scope="col">Section</th>
+              <th scope="col">Left</th>
+              <th scope="col">Right</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Desktop Surface</th>
+              <td>A cracked inkwell and a broken quill. Nothing useful.</td>
+              <td>A folded newspaper from 1887. The headline is too faded to read.</td>
+            </tr>
+            <tr>
+              <th scope="row">Top Drawers</th>
+              <td>
+                A bundle of letters tied with black ribbon, addressed to someone
+                named E. Ashford.
+              </td>
+              <td>
+                An old wax seal and a ring of skeleton keys. None of them fit
+                the cabinet on the wall.
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Bottom Drawers</th>
+              <td>Empty, except for a faint smell of tobacco and regret.</td>
+              <td>
+                A leather-bound journal, its last entry circled in red ink: the
+                passcode is NVDA.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div className="max-w-xs">
+          <p className="text-gray-300 mb-3">Enter the passcode to open the cabinet:</p>
+
+          {/* Input display */}
+          <div
+            aria-live="polite"
+            aria-label={`Passcode input: ${input || "empty"}`}
+            className="mb-4 text-xl tracking-widest text-center bg-gray-900 border border-gray-700 rounded-lg py-3 px-4"
+          >
+            {input.padEnd(4, "-").split("").map((char, i) => (
+              <span key={i} className="inline-block w-6 text-center">{char}</span>
+            ))}
+          </div>
+
+          {/* Character buttons — 3×3 grid */}
+          <div className="grid grid-cols-3 gap-3 mb-3">
+            {["N", "X", "A", "B", "V", "Y", "C", "D", "Z"].map((char) => (
+              <button key={char} onClick={() => handleChar(char)} className={btnClass}>
+                {char}
+              </button>
+            ))}
+          </div>
+
+          {/* Controls row */}
+          <div className="grid grid-cols-3 gap-3 mb-4">
+            <button
+              aria-label="Delete last character"
+              onClick={() => setInput((prev) => prev.slice(0, -1))}
+              className={btnClass}
+            >
+              ←
+            </button>
+            <button
+              aria-label="Clear all input"
+              onClick={() => setInput("")}
+              className={btnClass}
+            >
+              ✕
+            </button>
+            <button
+              aria-label={`Submit passcode${input ? ": " + input : ""}`}
+              onClick={handleSubmit}
+              className={btnClass}
+            >
+              ↵
+            </button>
           </div>
         </div>
 
-        {/* The hidden link - only findable via element list */}
-        <div className="sr-only">
-          <a href="#" onClick={(e) => { e.preventDefault(); handlePuzzleComplete(); }}>
-            The Secret Passage Behind the Portrait
-          </a>
-        </div>
-
-        {/* East Wall */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-henny text-gray-400 mb-4">East Wall</h2>
-          <p className="text-gray-300 mb-3">The east wall features a grand fireplace flanked by more doors.</p>
-          <div className="space-y-2">
-            <p><a href="#" className="text-spooky-purple hover:text-purple-400 underline" onClick={(e) => e.preventDefault()}>Portrait of the Twin Sisters</a></p>
-            <p className="text-gray-400 text-sm">Two identical girls in white dresses smile eerily.</p>
-            <p><a href="#" className="text-spooky-purple hover:text-purple-400 underline" onClick={(e) => e.preventDefault()}>Door to the Billiard Room</a></p>
-            <p className="text-gray-400 text-sm">Green felt is visible through the keyhole.</p>
-            <p><a href="#" className="text-spooky-purple hover:text-purple-400 underline" onClick={(e) => e.preventDefault()}>The Grandfather Clock</a></p>
-            <p className="text-gray-400 text-sm">It strikes thirteen at midnight, the locals say.</p>
-            <p><a href="#" className="text-spooky-purple hover:text-purple-400 underline" onClick={(e) => e.preventDefault()}>Door to the Servants&apos; Quarters</a></p>
-            <p className="text-gray-400 text-sm">A plain door, unremarkable compared to the others.</p>
-            <p><a href="#" className="text-spooky-purple hover:text-purple-400 underline" onClick={(e) => e.preventDefault()}>Painting of the Stormy Sea</a></p>
-            <p className="text-gray-400 text-sm">You can almost hear waves crashing when you stand near it.</p>
-            <p><a href="#" className="text-spooky-purple hover:text-purple-400 underline" onClick={(e) => e.preventDefault()}>Door to the Chapel</a></p>
-            <p className="text-gray-400 text-sm">A heavy iron door with a cross above it.</p>
-          </div>
-        </div>
-
-        {/* North Wall */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-henny text-gray-400 mb-4">North Wall</h2>
-          <p className="text-gray-300 mb-3">The north wall holds the grand staircase and more portraits.</p>
-          <div className="space-y-2">
-            <p><a href="#" className="text-spooky-purple hover:text-purple-400 underline" onClick={(e) => e.preventDefault()}>Portrait of the Founder</a></p>
-            <p className="text-gray-400 text-sm">The oldest painting here, darkened with age.</p>
-            <p><a href="#" className="text-spooky-purple hover:text-purple-400 underline" onClick={(e) => e.preventDefault()}>The Grand Staircase</a></p>
-            <p className="text-gray-400 text-sm">A sweeping marble staircase leading to the upper floors.</p>
-            <p><a href="#" className="text-spooky-purple hover:text-purple-400 underline" onClick={(e) => e.preventDefault()}>Door to the Tower</a></p>
-            <p className="text-gray-400 text-sm">A narrow door leading to a spiral staircase.</p>
-            <p><a href="#" className="text-spooky-purple hover:text-purple-400 underline" onClick={(e) => e.preventDefault()}>Suit of Armor</a></p>
-            <p className="text-gray-400 text-sm">A full suit of medieval armor stands guard.</p>
-            <p><a href="#" className="text-spooky-purple hover:text-purple-400 underline" onClick={(e) => e.preventDefault()}>Door to the Gallery</a></p>
-            <p className="text-gray-400 text-sm">More art awaits beyond this gilded door.</p>
-            <p><a href="#" className="text-spooky-purple hover:text-purple-400 underline" onClick={(e) => e.preventDefault()}>Portrait of the Last Duchess</a></p>
-            <p className="text-gray-400 text-sm">She looks sad, as if she knows something you don&apos;t.</p>
-          </div>
-        </div>
-
-        {/* South Wall */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-henny text-gray-400 mb-4">South Wall</h2>
-          <p className="text-gray-300 mb-3">The south wall faces the main entrance.</p>
-          <div className="space-y-2">
-            <p><a href="#" className="text-spooky-purple hover:text-purple-400 underline" onClick={(e) => e.preventDefault()}>The Front Door</a></p>
-            <p className="text-gray-400 text-sm">Locked from the inside. There&apos;s no going back.</p>
-            <p><a href="#" className="text-spooky-purple hover:text-purple-400 underline" onClick={(e) => e.preventDefault()}>Door to the Coat Room</a></p>
-            <p className="text-gray-400 text-sm">Dozens of old coats hang inside, smelling of moth balls.</p>
-            <p><a href="#" className="text-spooky-purple hover:text-purple-400 underline" onClick={(e) => e.preventDefault()}>Umbrella Stand</a></p>
-            <p className="text-gray-400 text-sm">A brass stand holding three black umbrellas.</p>
-            <p><a href="#" className="text-spooky-purple hover:text-purple-400 underline" onClick={(e) => e.preventDefault()}>Portrait of the Hound</a></p>
-            <p className="text-gray-400 text-sm">A large black dog with glowing red eyes.</p>
-            <p><a href="#" className="text-spooky-purple hover:text-purple-400 underline" onClick={(e) => e.preventDefault()}>Door to the Kitchen</a></p>
-            <p className="text-gray-400 text-sm">The smell of something cooking wafts through the cracks.</p>
-            <p><a href="#" className="text-spooky-purple hover:text-purple-400 underline" onClick={(e) => e.preventDefault()}>Decorative Mirror</a></p>
-            <p className="text-gray-400 text-sm">Your reflection seems to move a moment after you do.</p>
-          </div>
-        </div>
-
-        {/* Visual hint */}
-        <div className="mt-8 text-sm text-gray-600 italic">
-          Visual users: This puzzle requires screen reader element list navigation. The solution is a hidden link.
+        <div className="mt-4 text-sm text-gray-600 italic">
+          Visual users: This puzzle requires screen reader table navigation. The
+          passcode is hidden inside a table.
         </div>
       </div>
 
@@ -147,12 +205,14 @@ export default function Puzzle4() {
         isOpen={puzzleSolved}
         onClose={() => setPuzzleSolved(false)}
         puzzleNumber={4}
-        puzzleTitle="The Grand Foyer"
+        puzzleTitle="The Keeper's Study"
         description={
           <>
-            You&apos;ve mastered <strong>element lists</strong>! You learned how to view all links
-            on a page at once using <kbd>Insert+F7</kbd> (NVDA) or <kbd>VO+U</kbd> (VoiceOver),
-            quickly finding the hidden passage among dozens of options.
+            You&apos;ve mastered <strong>table navigation</strong>! Screen
+            readers move through tables cell by cell using column and row
+            headers as landmarks. Well-structured tables make this powerful —
+            without proper headers, table data becomes an unnavigable wall of
+            text.
           </>
         }
         completionTime={formatTime(elapsedTime)}
@@ -163,13 +223,17 @@ export default function Puzzle4() {
         hintContent={
           <>
             <p className="mb-2">
-              Too many doors to try one by one. See a list of all your options at once.
+              There&apos;s a desk in this room you can&apos;t see — but your
+              screen reader can find it.
             </p>
             <p className="mb-2">
-              <strong>NVDA:</strong> Press <kbd>Insert+F7</kbd> to open the element list and view all links.
+              <strong>NVDA:</strong> Press <kbd>T</kbd> to jump to the next
+              table, then use <kbd>Ctrl+Alt+Arrows</kbd> to navigate between
+              cells.
             </p>
             <p>
-              <strong>VoiceOver:</strong> Press <kbd>VO+U</kbd> to open the Rotor, then select Links.
+              <strong>VoiceOver:</strong> Press <kbd>VO+Cmd+T</kbd> to find the
+              table, then use <kbd>VO+Arrows</kbd> to move between cells.
             </p>
           </>
         }

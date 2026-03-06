@@ -46,8 +46,8 @@ export default function StartPage() {
     },
     {
       number: 4,
-      title: "The Grand Foyer",
-      description: "Use element lists in an ornate entrance hall with many doors.",
+      title: "The Keeper's Study",
+      description: "Navigate a hidden table to uncover the passcode locked inside a dusty desk.",
       href: "/puzzle/4",
     },
     {
