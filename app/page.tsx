@@ -18,7 +18,7 @@ export default function Home() {
             href="/getting-started"
             className="bg-transparent border border-white hover:bg-white hover:text-black text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black"
           >
-            Getting Started
+            Play
           </Link>
         </div>
 
